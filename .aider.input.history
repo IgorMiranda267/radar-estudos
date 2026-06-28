@@ -209,3 +209,87 @@
 
 # 2026-06-28 14:16:52.238937
 +y
+
+# 2026-06-28 14:34:13.463871
++Continue a Sprint 1.
++
++Os arquivos necessários já foram adicionados ao chat.
++
++Edite apenas os seguintes arquivos:
++
++- .env
++- prisma/schema.prisma
++- lib/prisma.ts
++
++Utilize como referência obrigatória:
++
++- .aider/DATABASE.md
++- .aider/CONVENTIONS.md
++- .aider/BUSINESS_RULES.md
++
++Objetivo:
++
++1. Configurar SQLite.
++2. Criar o schema completo do Prisma.
++3. Configurar o cliente Prisma para Next.js.
++4. Não alterar outros arquivos.
++
++Ao terminar, execute:
++
++npx prisma generate
++
++Se houver erro, pare imediatamente e explique o motivo antes de continuar.
+
+# 2026-06-28 14:46:32.007129
++y
+
+# 2026-06-28 15:07:15.358392
++A implementação anterior está incorreta e deve ser descartada.
++
++Ela NÃO seguiu o DATABASE.md e criou entidades de um sistema de e-commerce (User, Product, Order, Category), que não pertencem ao projeto Radar de Estudos.
++
++Antes de escrever qualquer código:
++
++1. Leia novamente:
++   - .aider/DATABASE.md
++   - .aider/PROJECT.md
++   - .aider/BUSINESS_RULES.md
++   - .aider/CONVENTIONS.md
++
++2. Não utilize conhecimento prévio ou exemplos genéricos.
++
++3. Utilize EXCLUSIVAMENTE as entidades definidas em DATABASE.md.
++
++As únicas entidades permitidas são:
++
++- Banca
++- Concurso
++- Disciplina
++- Assunto
++- SessaoEstudo
++- Revisao
++- Meta
++
++Não crie nenhuma entidade adicional.
++
++Não crie User.
++
++Não crie Product.
++
++Não crie Order.
++
++Não crie Category.
++
++Não utilize UUID.
++
++Utilize Int @id @default(autoincrement()) conforme definido nas convenções.
++
++Antes de editar qualquer arquivo, apresente um resumo das entidades que serão criadas.
++
++Aguarde minha confirmação antes de modificar o schema.prisma.
+
+# 2026-06-28 15:07:18.033954
++y
+
+# 2026-06-28 15:31:15.272000
++Sim está correta a modelagem
