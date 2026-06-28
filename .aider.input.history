@@ -1,0 +1,211 @@
+
+# 2026-06-28 13:59:52.973547
++n
+
+# 2026-06-28 13:59:56.975597
++ola
+
+# 2026-06-28 14:01:13.944116
++# Sprint 1 - Infraestrutura do Banco de Dados
++
++Antes de iniciar qualquer alteração, leia atentamente os seguintes documentos do projeto:
++
++- .aider/AGENTS.md
++- .aider/PROJECT.md
++- .aider/ROADMAP.md
++- .aider/DATABASE.md
++- .aider/FEATURES.md
++- .aider/BUSINESS_RULES.md
++- .aider/CONVENTIONS.md
++- .aider/API.md
++- .aider/UI.md
++
++Esses documentos são a fonte oficial de informações do projeto.
++
++---
++
++## Objetivo da Sprint
++
++Implementar toda a infraestrutura do banco de dados utilizando Prisma + SQLite.
++
++Nesta Sprint NÃO desenvolver nenhuma tela de negócio, CRUD ou dashboard.
++
++O foco é apenas preparar a base da aplicação.
++
++---
++
++## Tarefas
++
++Execute exatamente nesta ordem:
++
++### 1. Verifique o projeto
++
++- confirme que o projeto é Next.js
++- confirme que o TypeScript está configurado
++
++---
++
++### 2. Instale as dependências
++
++Caso ainda não existam, instale:
++
++- prisma
++- @prisma/client
++
++Não reinstale dependências já existentes.
++
++---
++
++### 3. Inicialize o Prisma
++
++Caso ainda não exista:
++
++prisma/schema.prisma
++
++---
++
++### 4. Configure o SQLite
++
++Criar ou atualizar o arquivo:
++
++.env
++
++utilizando:
++
++DATABASE_URL="file:./dev.db"
++
++---
++
++### 5. Criar o schema do Prisma
++
++Utilize EXATAMENTE a modelagem descrita em DATABASE.md.
++
++Não invente entidades.
++
++Não remova campos.
++
++Caso exista alguma dúvida, pare e pergunte.
++
++---
++
++### 6. Gerar Migration
++
++Execute:
++
++npx prisma migrate dev --name init
++
++---
++
++### 7. Gerar Prisma Client
++
++Execute:
++
++npx prisma generate
++
++---
++
++### 8. Criar o cliente Prisma
++
++Criar:
++
++lib/prisma.ts
++
++seguindo as boas práticas para Next.js.
++
++---
++
++### 9. Validar
++
++Criar uma rota simples apenas para validar que a conexão funciona.
++
++Pode ser:
++
++app/test-db/page.tsx
++
++Essa página apenas deverá consultar o banco e exibir uma mensagem simples.
++
++Não criar layout sofisticado.
++
++---
++
++## Git
++
++Antes de iniciar:
++
++- criar uma branch:
++
++feature/sprint-01-prisma
++
++Ao finalizar:
++
++- revisar todos os arquivos alterados
++- garantir que o projeto compile
++- executar lint caso exista
++- realizar commit utilizando Conventional Commits
++
++Mensagem:
++
++feat(database): configure Prisma and SQLite infrastructure
++
++Não realizar merge.
++
++Não alterar a branch develop.
++
++Não alterar a branch main.
++
++---
++
++## Restrições
++
++Não modificar arquivos que não sejam necessários.
++
++Não alterar documentação.
++
++Não criar funcionalidades futuras.
++
++Não criar código morto.
++
++Não criar comentários desnecessários.
++
++Não utilizar any.
++
++Sempre utilizar TypeScript.
++
++---
++
++## Critérios de aceite
++
++A Sprint será considerada concluída somente se:
++
++- Prisma instalado
++- SQLite configurado
++- Schema criado
++- Migration criada
++- Prisma Client gerado
++- lib/prisma.ts criado
++- aplicação executando normalmente
++- teste simples funcionando
++- commit realizado
++
++---
++
++## IMPORTANTE
++
++Não diga que criou arquivos ou executou comandos sem realmente fazê-lo.
++
++Se algum comando falhar:
++
++- pare imediatamente;
++- explique o motivo;
++- apresente a correção;
++- somente depois continue.
++
++Ao final apresente um resumo contendo:
++
++- arquivos criados;
++- arquivos alterados;
++- comandos executados;
++- resultado dos testes.
+
+# 2026-06-28 14:16:52.238937
++y
