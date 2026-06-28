@@ -7,48 +7,91 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
+model Banca {
+  id        Int      @id @default(autoincrement())
+  nome      String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
-  orders    Order[]
 }
 
-model Product {
-  id          String   @id @default(uuid())
-  name        String
-  price       Float
-  stock       Int
-  categoryId  String
-  category    Category @relation(fields: [categoryId], references: [id])
+model Concurso {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  orgao     String
+  cargo     String
+  bancaId   Int
+  edital    String
+  ativo     Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  banca     Banca    @relation(fields: [bancaId], references: [id])
+}
+
+model Disciplina {
+  id          Int      @id @default(autoincrement())
+  concursoId  Int
+  nome        String
+  descricao   String
+  cor         String
+  icone       String
+  ordem       Int
+  ativa       Boolean
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
+  concurso    Concurso @relation(fields: [concursoId], references: [id])
 }
 
-model Category {
-  id    String   @id @default(uuid())
-  name  String
-  products Product[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+model Assunto {
+  id          Int      @id @default(autoincrement())
+  disciplinaId Int
+  nome        String
+  descricao   String
+  prioridade  Int
+  ativa       Boolean
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+  disciplina  Disciplina @relation(fields: [disciplinaId], references: [id])
 }
 
-model Order {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  products  Product[]
-  total     Float
-  status    Status
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+model SessaoEstudo {
+  id            Int          @id @default(autoincrement())
+  disciplinaId  Int
+  assuntoId     Int
+  data          DateTime
+  tipo          String
+  tempoEstudado Float
+  quantidadeQuestoes Int
+  acertos       Int
+  erros         Int
+  observacoes   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now()) @updatedAt
+  disciplina    Disciplina @relation(fields: [disciplinaId], references: [id])
+  assunto       Assunto    @relation(fields: [assuntoId], references: [id])
 }
 
-model Status {
-  id    String   @id @default(uuid())
-  name  String
-  orders Order[]
+model Revisao {
+  id            Int          @id @default(autoincrement())
+  assuntoId     Int
+  dataPrevista  DateTime
+  dataRealizada DateTime
+  status        String
+  tipo          String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now()) @updatedAt
+  assunto       Assunto    @relation(fields: [assuntoId], references: [id])
+}
+
+model Meta {
+  id          Int          @id @default(autoincrement())
+  titulo      String
+  descricao   String
+  tipo        String
+  valor       Float
+  progresso   Float
+  dataInicio  DateTime
+  dataFim     DateTime
+  ativa       Boolean
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
 }
