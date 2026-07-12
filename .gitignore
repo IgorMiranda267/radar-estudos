@@ -137,3 +137,22 @@ test-results/
 # Misc
 # ==========================================================
 *.seed
+# ==========================================================
+# Logs
+# ==========================================================
+logs/
+log/
+*.log
+*.log.*
+*.out
+*.err
+*.pid
+*.pid.lock
+current
+current.log
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
