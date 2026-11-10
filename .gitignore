@@ -18,6 +18,9 @@ out/
 build/
 dist/
 coverage/
+**/bin/
+**/obj/
+**/TestResults/
 
 # Turbopack
 .turbo/
