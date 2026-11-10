@@ -1,36 +1,153 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AIStudy Lab
 
-## Getting Started
+**Uma plataforma para organizar estudos, acompanhar o progresso e, futuramente, aprender com apoio de Inteligência Artificial.**
 
-First, run the development server:
+O AIStudy Lab está em desenvolvimento. Hoje, o núcleo do produto permite que cada pessoa organize disciplinas e assuntos, registre sessões de estudo, defina metas, acompanhe revisões e consulte seu desempenho. A aplicação web e a API já trabalham com PostgreSQL e contas autenticadas.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+A biblioteca de documentos, o tutor de IA e os recursos de RAG fazem parte dos próximos passos; ainda não estão implementados. O projeto também serve como laboratório para explorar essas tecnologias de forma incremental.
+
+> 🚧 **Status:** aplicação funcional em desenvolvimento. Consulte o [acompanhamento da implementação](./docs/implementation-status.md) para ver o que está pronto e o que falta.
+
+## O que já funciona
+
+- Cadastro, login e logout com sessão em cookie `HttpOnly`.
+- Perfil do usuário e preferências.
+- Cadastro e gerenciamento de disciplinas e assuntos.
+- Registro de sessões de estudo, incluindo tempo e questões.
+- Metas e revisões.
+- Dashboard, histórico e estatísticas com dados da conta.
+- Autorização por sessão: os endpoints de estudo identificam o usuário autenticado, sem confiar em um `usuarioId` enviado pelo navegador.
+
+## O que está planejado
+
+- Biblioteca e upload de materiais, com armazenamento e processamento de documentos.
+- Tutor de IA e histórico de conversas.
+- RAG, embeddings, busca vetorial e respostas com fontes.
+- Flashcards, simulados e outras ferramentas de aprendizagem, ainda sujeitos à definição de escopo.
+
+Esses itens são objetivos do produto, não funcionalidades disponíveis na versão atual.
+
+## Tecnologias e arquitetura
+
+| Componente | Tecnologia | Situação |
+|---|---|---|
+| Aplicação web | Next.js, React, TypeScript, Tailwind CSS | Implementada |
+| API e regras de negócio | C#, ASP.NET Core e .NET 10 | Implementadas |
+| Persistência | PostgreSQL e Entity Framework Core | Implementados |
+| Testes do backend | xUnit e testes de integração da API | Implementados |
+| Serviços de IA | Python | Planejados; ainda sem serviço integrado |
+| Modelo de IA e busca vetorial | A definir | Planejados |
+
+O backend está separado em API, aplicação, domínio e infraestrutura. O fluxo atualmente implementado é:
+
+```mermaid
+flowchart LR
+    U[Estudante] --> W[Frontend Next.js]
+    W -->|API e cookie de sessão| A[API ASP.NET Core]
+    A --> D[(PostgreSQL)]
+    A -. integração futura .-> P[Serviços de IA em Python]
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Estrutura do repositório
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+.
+├── backend/
+│   ├── AIStudyLab.Api/             # API ASP.NET Core e endpoints
+│   ├── AIStudyLab.Application/     # Contratos e serviços da aplicação
+│   ├── AIStudyLab.Domain/          # Entidades e regras de domínio
+│   ├── AIStudyLab.Infrastructure/  # EF Core, PostgreSQL e migrations
+│   └── tests/                      # Testes de domínio e integração
+├── frontend/                       # Aplicação Next.js
+├── python/                         # Espaço documentado para futuros serviços de IA
+├── infra/                          # Documentação de infraestrutura planejada
+└── docs/                           # Documentação técnica e funcional
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Executar localmente
 
-## Learn More
+### Pré-requisitos
 
-To learn more about Next.js, take a look at the following resources:
+- Node.js e npm.
+- .NET SDK 10.
+- PostgreSQL em execução e um banco criado para o projeto.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Python, Ollama e Qdrant **não são necessários** para executar as funcionalidades atuais.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 1. Instalar dependências do frontend
 
-## Deploy on Vercel
+Na raiz do repositório:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```powershell
+npm install
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 2. Configurar e iniciar a API
+
+Em um terminal PowerShell:
+
+```powershell
+cd backend
+dotnet tool restore
+
+$env:ConnectionStrings__DefaultConnection = "Host=localhost;Port=5432;Database=aistudylab;Username=postgres;Password=SUA_SENHA"
+
+dotnet ef database update --project .\AIStudyLab.Infrastructure --startup-project .\AIStudyLab.Api
+dotnet run --project .\AIStudyLab.Api --urls http://localhost:5259
+```
+
+Use uma senha local apropriada no lugar de `SUA_SENHA`. A connection string não deve ser adicionada a arquivos versionados. O endpoint de saúde fica em `http://localhost:5259/health`; em `Development`, a documentação OpenAPI fica em `http://localhost:5259/openapi/v1.json`.
+
+### 3. Iniciar o frontend
+
+Em outro terminal, na raiz do repositório:
+
+```powershell
+npm run dev
+```
+
+Abra `http://localhost:3000`. Por padrão, o frontend usa a API na porta `5259`, preservando o hostname usado no navegador. Se a API estiver em outro endereço, defina `NEXT_PUBLIC_API_BASE_URL` antes de iniciar o Next.js.
+
+Crie uma conta pela tela de login/cadastro para começar a usar as páginas autenticadas. O arquivo [AIStudyLab.Api.http](./backend/AIStudyLab.Api/AIStudyLab.Api.http) contém exemplos de requisições para a API.
+
+> As instruções detalhadas de migrations, autenticação e testes também estão em [backend/README.md](./backend/README.md).
+
+## Testes e build
+
+Na raiz, valide o frontend:
+
+```powershell
+npm run build
+npm run lint
+```
+
+Para compilar e testar o backend:
+
+```powershell
+dotnet build .\backend\AIStudyLab.slnx
+dotnet test .\backend\AIStudyLab.slnx
+```
+
+## Segurança e implantação
+
+- As páginas e rotas de estudo exigem uma sessão autenticada; os dados são consultados no escopo do usuário da sessão.
+- O cookie de sessão é `HttpOnly` e `SameSite=Strict`; fora de `Development`, é enviado somente por HTTPS.
+- As operações de escrita validam origem e cabeçalho anti-CSRF. A API exige origens CORS configuradas fora de `Development`.
+- Login e cadastro têm limitação de requisições por endereço IP.
+- A connection string deve ser fornecida por configuração segura do ambiente, nunca commitada.
+
+Antes de publicar, configure HTTPS e as origens confiáveis do frontend (`Cors__AllowedOrigins__0`, `Cors__AllowedOrigins__1` etc.). Veja [backend/README.md](./backend/README.md) para detalhes operacionais.
+
+## Documentação
+
+- [Status e próximos passos](./docs/implementation-status.md)
+- [Arquitetura](./docs/architecture.md)
+- [Modelo de dados](./docs/database.md)
+- [API](./docs/api.md)
+- [Regras de negócio](./docs/business-rules.md)
+- [Experiência do usuário e telas](./docs/09_UI_UX/README.md)
+- [Instruções do backend](./backend/README.md)
+
+---
+
+O AIStudy Lab é desenvolvido de forma incremental, unindo organização da aprendizagem, engenharia de software e experimentação responsável com Inteligência Artificial.
