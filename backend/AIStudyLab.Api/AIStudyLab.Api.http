@@ -1,0 +1,261 @@
+@baseUrl = http://localhost:5259
+@origin = http://localhost:3000
+@disciplineId = {{createDiscipline.response.body.$.id}}
+@subjectId = {{createSubject.response.body.$.id}}
+@sessionId = {{createSession.response.body.$.id}}
+@goalId = {{createGoal.response.body.$.id}}
+@reviewId = {{createReview.response.body.$.id}}
+
+### Health
+GET {{baseUrl}}/health
+
+### Register and sign in (cookie is stored by the REST Client)
+# @name register
+POST {{baseUrl}}/api/auth/register
+Origin: {{origin}}
+X-AIStudyLab-Request: 1
+Content-Type: application/json
+
+{
+  "nome": "Estudante",
+  "email": "estudante@example.com",
+  "senha": "SenhaLocal123!"
+}
+
+### Sign in
+POST {{baseUrl}}/api/auth/login
+Origin: {{origin}}
+X-AIStudyLab-Request: 1
+Content-Type: application/json
+
+{
+  "email": "estudante@example.com",
+  "senha": "SenhaLocal123!"
+}
+
+### Invalid login (must return 401)
+POST {{baseUrl}}/api/auth/login
+Origin: {{origin}}
+X-AIStudyLab-Request: 1
+Content-Type: application/json
+
+{
+  "email": "estudante@example.com",
+  "senha": "senha-incorreta"
+}
+
+### Current account
+GET {{baseUrl}}/api/auth/me
+
+### Get current user profile
+GET {{baseUrl}}/api/me/perfil
+
+### Update current user profile
+PUT {{baseUrl}}/api/me/perfil
+Origin: {{origin}}
+X-AIStudyLab-Request: 1
+Content-Type: application/json
+
+{
+  "objetivo": "Preparação para concurso",
+  "nivel": "Intermediário",
+  "cidade": "São Paulo",
+  "instituicao": "Instituto de Estudos",
+  "bio": "Estudando para a próxima prova.",
+  "dataNascimento": "1995-04-12"
+}
+
+### List disciplines
+GET {{baseUrl}}/api/me/disciplinas
+
+### Create a discipline
+# @name createDiscipline
+POST {{baseUrl}}/api/me/disciplinas
+Origin: {{origin}}
+X-AIStudyLab-Request: 1
+Content-Type: application/json
+
+{
+  "nome": "Matemática",
+  "cor": "#2563EB",
+  "icone": "book-open"
+}
+
+### Update a discipline
+PUT {{baseUrl}}/api/me/disciplinas/{{disciplineId}}
+Origin: {{origin}}
+X-AIStudyLab-Request: 1
+Content-Type: application/json
+
+{
+  "nome": "Matemática básica",
+  "cor": "#2563EB",
+  "icone": "book-open"
+}
+
+### Get a discipline
+GET {{baseUrl}}/api/me/disciplinas/{{disciplineId}}
+
+### Deactivate a discipline (retains study history)
+DELETE {{baseUrl}}/api/me/disciplinas/{{disciplineId}}
+Origin: {{origin}}
+X-AIStudyLab-Request: 1
+
+### List subjects
+GET {{baseUrl}}/api/me/disciplinas/{{disciplineId}}/assuntos
+
+### Create a subject
+# @name createSubject
+POST {{baseUrl}}/api/me/disciplinas/{{disciplineId}}/assuntos
+Origin: {{origin}}
+X-AIStudyLab-Request: 1
+Content-Type: application/json
+
+{
+  "nome": "Funções e gráficos",
+  "descricao": "Conceitos e exercícios de funções",
+  "dificuldade": "Medium",
+  "ordem": 1
+}
+
+### Get a subject
+GET {{baseUrl}}/api/me/disciplinas/{{disciplineId}}/assuntos/{{subjectId}}
+
+### Update a subject
+PUT {{baseUrl}}/api/me/disciplinas/{{disciplineId}}/assuntos/{{subjectId}}
+Origin: {{origin}}
+X-AIStudyLab-Request: 1
+Content-Type: application/json
+
+{
+  "nome": "Funções",
+  "descricao": "Funções e representação gráfica",
+  "dificuldade": "Medium",
+  "ordem": 1
+}
+
+### Record a study session
+# @name createSession
+POST {{baseUrl}}/api/me/disciplinas/{{disciplineId}}/sessoes-estudo
+Origin: {{origin}}
+X-AIStudyLab-Request: 1
+Content-Type: application/json
+
+{
+  "data": "2026-11-09",
+  "tempoEstudadoMinutos": 60,
+  "questoes": 10,
+  "acertos": 7,
+  "erros": 3,
+  "assuntoId": "{{subjectId}}",
+  "banca": "Exemplo",
+  "observacoes": "Primeira sessão via API"
+}
+
+### List study sessions
+GET {{baseUrl}}/api/me/sessoes-estudo
+
+### Get a study session
+GET {{baseUrl}}/api/me/sessoes-estudo/{{sessionId}}
+
+### Get dashboard
+GET {{baseUrl}}/api/me/dashboard
+
+### Create a goal
+# @name createGoal
+POST {{baseUrl}}/api/me/metas
+Origin: {{origin}}
+X-AIStudyLab-Request: 1
+Content-Type: application/json
+
+{
+  "tipo": "StudyMinutes",
+  "nome": "Estudar 10 horas",
+  "quantidade": 600,
+  "unidade": "minutos",
+  "dataInicio": "2026-11-09",
+  "dataFim": "2026-11-15"
+}
+
+### List goals
+GET {{baseUrl}}/api/me/metas
+
+### Update a goal
+PUT {{baseUrl}}/api/me/metas/{{goalId}}
+Origin: {{origin}}
+X-AIStudyLab-Request: 1
+Content-Type: application/json
+
+{
+  "tipo": "StudyMinutes",
+  "nome": "Estudar 12 horas",
+  "quantidade": 720,
+  "unidade": "minutos",
+  "dataInicio": "2026-11-09",
+  "dataFim": "2026-11-15",
+  "ativa": true
+}
+
+### Delete a goal
+DELETE {{baseUrl}}/api/me/metas/{{goalId}}
+Origin: {{origin}}
+X-AIStudyLab-Request: 1
+
+### Create a review
+# @name createReview
+POST {{baseUrl}}/api/me/assuntos/{{subjectId}}/revisoes
+Origin: {{origin}}
+X-AIStudyLab-Request: 1
+Content-Type: application/json
+
+{
+  "dataAgendada": "2026-11-10",
+  "observacoes": "Revisar os exercícios incorretos"
+}
+
+### List reviews
+GET {{baseUrl}}/api/me/revisoes
+
+### Complete a review
+PUT {{baseUrl}}/api/me/revisoes/{{reviewId}}
+Origin: {{origin}}
+X-AIStudyLab-Request: 1
+Content-Type: application/json
+
+{
+  "dataAgendada": "2026-11-10",
+  "status": "Completed",
+  "observacoes": "Revisão concluída"
+}
+
+### Delete a review
+DELETE {{baseUrl}}/api/me/revisoes/{{reviewId}}
+Origin: {{origin}}
+X-AIStudyLab-Request: 1
+
+### Delete a subject (returns conflict when study history references it)
+DELETE {{baseUrl}}/api/me/disciplinas/{{disciplineId}}/assuntos/{{subjectId}}
+Origin: {{origin}}
+X-AIStudyLab-Request: 1
+
+### Get settings
+GET {{baseUrl}}/api/me/configuracoes
+
+### Save settings
+PUT {{baseUrl}}/api/me/configuracoes
+Origin: {{origin}}
+X-AIStudyLab-Request: 1
+Content-Type: application/json
+
+{
+  "tema": "system",
+  "idioma": "pt-BR",
+  "notificacoesAtivadas": true,
+  "objetivoDiarioMinutos": 120,
+  "disciplinaFocoId": "{{disciplineId}}"
+}
+
+### Sign out
+POST {{baseUrl}}/api/auth/logout
+Origin: {{origin}}
+X-AIStudyLab-Request: 1

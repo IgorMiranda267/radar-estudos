@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/tests/">
+    <Project Path="tests/AIStudyLab.Domain.Tests/AIStudyLab.Domain.Tests.csproj" />
+  </Folder>
+  <Project Path="AIStudyLab.Api/AIStudyLab.Api.csproj" />
+  <Project Path="AIStudyLab.Application/AIStudyLab.Application.csproj" />
+  <Project Path="AIStudyLab.Domain/AIStudyLab.Domain.csproj" />
+  <Project Path="AIStudyLab.Infrastructure/AIStudyLab.Infrastructure.csproj" />
+</Solution>
